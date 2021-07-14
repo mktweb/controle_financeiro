@@ -106,10 +106,10 @@ if ( isset($_SESSION['alert']) ) {
             crossorigin="anonymous">
         </script>
 
+        <script src="../assets/dashboard.js"></script>
+
         <script>
             $(document).ready(function(){
-                feather.replace({ 'aria-hidden': 'true' });
-
                 $('#nascimento').mask('00/00/0000');
                 $('#data_vencimento').mask('00/00/0000');
                 $('#valor').mask('000.000.000.000,00', {reverse: true});

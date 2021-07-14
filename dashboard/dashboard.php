@@ -1,35 +1,59 @@
 <?php
-
 require_once('../db/devedores.php');
 
 class Dashboard
 {
     public $devedores;
 
+    /**
+     * Construtor
+     * 
+     * Verifica se o usuário está logado
+     */
     public function __construct()
     {
         session_start();
+
         if (!$_SESSION['email'])
             header('Location: ../index.php');
+        
         $this->devedores = new Devedores();
     }
 
+    /**
+     * Método da página inicial
+     */
     public function index()
     {
-        $this->view('inicial');
+        $count_devedores = $this->devedores->count();
+        $total_divida = $this->devedores->sum();
+        $ultimos = $this->devedores->filter(5, 'id', 'desc');
+        $maiores = $this->devedores->filter(5, 'valor', 'desc');
+        $this->view('inicial', [
+            'qtd_devedores' => $count_devedores, 
+            'total_divida' => $total_divida,
+            'ultimos_cadastros' => $ultimos,
+            'maiores_dividas' => $maiores
+        ]);
     }
 
+    /**
+     * Método de listar devedores
+     */
     public function listar()
     {
         $start = $_GET['start'] ?? 0; 
         $devedores = $this->devedores->list(20, $start);
-        $count_devedores = count($devedores);
+        $count_devedores = $this->devedores->count();
         $this->view('listar', [
             'devedores' => $devedores,
             'qtd_devedores' => $count_devedores
         ]);
     }
 
+    /**
+     * Método da página de adicionar devedores
+     */
     public function adicionar()
     {
         if ($_POST['cpf_cnpj']) {
@@ -56,6 +80,9 @@ class Dashboard
         }
     }
 
+    /**
+     * Método da página de editar devedores
+     */
     public function editar()
     {
         $devedor = $this->devedores->get('id', $_GET['id']);
@@ -88,6 +115,9 @@ class Dashboard
         }
     }
 
+    /**
+     * Método de remover devedores
+     */
     public function remover()
     {
         try {
@@ -103,7 +133,26 @@ class Dashboard
         header('Location: /dashboard?page=listar');
     }
 
-    public function view($arquivo, $array = null)
+    /**
+     * Método da página de visualizar devedores
+     */
+    public function visualizar()
+    {
+        try {
+            $devedor = $this->devedores->get('id', $_GET['id']);
+
+            $this->view('visualizar', ['devedor' => $devedor]);
+        } catch (\Throwable $th) {
+            $_SESSION['alert'] = 'danger';
+            $_SESSION['mensagem'] = 'Devedor não encontrado.';
+            header('Location: /dashboard?page=listar');
+        }
+    }
+
+    /**
+     * Método que converte as views
+     */
+    private function view($arquivo, $array = null)
     {
         if (!is_null($array)) {
             foreach ($array as $var => $value) {

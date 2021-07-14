@@ -45,6 +45,13 @@ function mask($val, $mask) {
             font-size: 3.5rem;
             }
         }
+
+        .paginator {
+            width: 100%;
+            max-width: 330px;
+            padding: 15px;
+            margin: auto;
+        }
         </style>
         <link href="../assets/dashboard.css" rel="stylesheet">
     </head>
@@ -67,10 +74,6 @@ function mask($val, $mask) {
                         </div>
                     <?php endif; ?>
 
-                    <div>
-                        Quantidade: <?= $qtd_devedores; ?>
-                    </div>
-
                     <div class="table-responsive">
                         <table class="table table-striped table-sm align-middle">
                             <thead>
@@ -84,7 +87,7 @@ function mask($val, $mask) {
                                 </tr>
                             </thead>
                             <tbody>
-                                <?php if ($qtd_devedores == 0) : ?>
+                                <?php if ($qtd_devedores->qtd == 0) : ?>
                                 <tr>
                                     <td colspan="6" class="text-center">Ainda não existem devedores cadastrados</td>
                                 </tr>
@@ -103,10 +106,13 @@ function mask($val, $mask) {
                                     <td><?= number_format($devedor['valor'], 2, ',', '.'); ?></td>
                                     <td><?= date( 'd/m/Y', strtotime($devedor['data_vencimento']) ); ?></td>
                                     <td>
-                                        <a href="/dashboard?page=editar&id=<?= $devedor['id']; ?>" class="btn btn-primary btn-sm" title="Editar">
+                                    <a href="/dashboard?page=visualizar&id=<?= $devedor['id']; ?>" class="btn btn-secondary btn-sm me-md-2" title="Visualizar">
+                                            <span data-feather="eye"></span>
+                                        </a>
+                                        <a href="/dashboard?page=editar&id=<?= $devedor['id']; ?>" class="btn btn-primary btn-sm me-md-2" title="Editar">
                                             <span data-feather="edit"></span>
                                         </a>
-                                        <button class="btn btn-danger btn-sm" onclick="remover(<?= $devedor['id']; ?>);">
+                                        <button class="btn btn-danger btn-sm" onclick="remover(<?= $devedor['id']; ?>);" title="Remover">
                                             <span data-feather="x"></span>
                                         </button>
                                     </td>
@@ -116,6 +122,47 @@ function mask($val, $mask) {
                                 endif; ?>
                             </tbody>
                         </table>
+                        
+                        <?php
+                        $start = (int) ($qtd_devedores->qtd / 20);
+                        $actual = $_GET['start'] ? $_GET['start'] : 0;
+                        $prev = ($actual && $actual > 0) ? $actual - 1 : 0;
+                        $next = ($actual < $start) ? $actual + 1 : $start;
+
+                        if($start > 0) :
+                        ?>
+                        <div class="paginator">
+                            <nav>
+                                <ul class="pagination">
+                                    <li class="page-item <?= $actual == 0 ? 'disabled' : ''; ?>">
+                                        <a class="page-link" href="/dashboard?page=listar&start=0" aria-label="Voltar">
+                                        <span data-feather="chevrons-left"></span>
+                                        </a>
+                                    </li>
+                                    <li class="page-item <?= $actual == 0 ? 'disabled' : ''; ?>">
+                                        <a class="page-link" href="/dashboard?page=listar&start=<?= $prev; ?>" aria-label="Voltar">
+                                        <span data-feather="chevron-left"></span>
+                                        </a>
+                                    </li>
+                                    <?php for ($i=0; $i <= $start; $i++) : ?>
+                                        <li class="page-item <?= $actual == $i ? 'active' : ''; ?>">
+                                            <a class="page-link" href="/dashboard?page=listar&start=<?= $i; ?>"><?= $i+1; ?></a>
+                                        </li>
+                                    <?php endfor; ?>
+                                    <li class="page-item <?= $actual == $start ? 'disabled' : ''; ?>">
+                                        <a class="page-link" href="/dashboard?page=listar&start=<?= $next; ?>" aria-label="Avançar">
+                                        <span data-feather="chevron-right"></span>
+                                        </a>
+                                    </li>
+                                    <li class="page-item <?= $actual == $start ? 'disabled' : ''; ?>">
+                                        <a class="page-link" href="/dashboard?page=listar&start=<?= $start; ?>" aria-label="Avançar">
+                                        <span data-feather="chevrons-right"></span>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </nav>
+                        </div>
+                        <?php endif; ?>
                     </div>
                 </main>
             </div>
@@ -123,20 +170,16 @@ function mask($val, $mask) {
 
         <script src="../assets/dist/js/bootstrap.bundle.min.js"></script>
         <script 
-            src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js" 
-            integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" 
-            crossorigin="anonymous">
-        </script>
-        <script 
             src="https://cdn.jsdelivr.net/npm/feather-icons@4.28.0/dist/feather.min.js" 
             integrity="sha384-uO3SXW5IuS1ZpFPKugNNWqTZRRglnUJK6UAZ/gxOX80nxEkN9NcGZTftn6RzhGWE" 
             crossorigin="anonymous">
         </script>
         <script 
-            src="https://cdn.jsdelivr.net/npm/chart.js@2.9.4/dist/Chart.min.js" 
-            integrity="sha384-zNy6FEbO50N+Cg5wap8IKA4M/ZnLJgzc6w2NqACZaK0u0FXfOWRRJOnQtpZun8ha" 
+            src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js" 
+            integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" 
             crossorigin="anonymous">
         </script>
+
         <script src="../assets/dashboard.js"></script>
 
         <script>
@@ -147,6 +190,5 @@ function mask($val, $mask) {
                 }
             }
         </script>
-
     </body>
 </html>

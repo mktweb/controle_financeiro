@@ -20,6 +20,10 @@ switch($_GET['page']) {
         $dashboard->remover();
         break;
 
+    case 'visualizar':
+        $dashboard->visualizar();
+        break;
+
     default: 
         $dashboard->index();
 }

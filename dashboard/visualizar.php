@@ -18,7 +18,7 @@ $devedor->data_vencimento = date( 'd/m/Y', strtotime($devedor->data_vencimento) 
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>Dashboard Devedores - Editar</title>
+        <title>Dashboard Devedores - Visualizar</title>
 
         <link href="../assets/dist/css/bootstrap.min.css" rel="stylesheet">
 
@@ -48,7 +48,7 @@ $devedor->data_vencimento = date( 'd/m/Y', strtotime($devedor->data_vencimento) 
 
                 <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
                     <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-                        <h1 class="h2">Editar Devedor</h1>
+                        <h1 class="h2">Visualizar Devedor</h1>
                     </div>
                     
                     <?php if($alert) : ?>
@@ -58,43 +58,39 @@ $devedor->data_vencimento = date( 'd/m/Y', strtotime($devedor->data_vencimento) 
                     <?php endif; ?>
 
                     <div>
-                        <form method="post">
-                            <input type="hidden" name="id" value="<?= $devedor->id ?>">
-                            <div class="row g-3">
-                                <div class="col-md-12">
-                                    <label for="nome" class="form-label">Nome</label>
-                                    <input type="text" name="nome" id="nome" class="form-control" value="<?= $devedor->nome; ?>">
-                                </div>
-                                <div class="col-md-12">
-                                    <label for="endereco" class="form-label">Endereço</label>
-                                    <input type="text" name="endereco" id="endereco" class="form-control" value="<?= $devedor->endereco; ?>">
-                                </div>
-                                <div class="col-md-3">
-                                    <label for="cpf_cnpj" class="form-label">CPF/CNPJ</label>
-                                    <input type="text" name="cpf_cnpj" id="cpf_cnpj" class="form-control" value="<?= $devedor->cpf_cnpj; ?>">
-                                </div>
-                                <div class="col-md-3">
-                                    <label for="nascimento" class="form-label">Data de Nascimento</label>
-                                    <input type="text" name="nascimento" id="nascimento" class="form-control" value="<?= $devedor->nascimento; ?>">
-                                </div>
-                                <div class="col-md-3">
-                                    <label for="valor" class="form-label">Valor</label>
-                                    <input type="text" name="valor" id="valor" class="form-control" value="<?= $devedor->valor; ?>">
-                                </div>
-                                <div class="col-md-3">
-                                    <label for="data_vencimento" class="form-label">Data de Vencimento</label>
-                                    <input type="text" name="data_vencimento" id="data_vencimento" class="form-control" value="<?= $devedor->data_vencimento; ?>">
-                                </div>
-                                <div class="col-md-12">
-                                    <label for="descricao_titulo" class="form-label">Descrição do Título</label>
-                                    <textarea name="descricao_titulo" id="descricao_titulo" class="form-control" rows="5"><?= $devedor->descricao_titulo; ?></textarea>
-                                </div>
-                                <div class="col-6">
-                                    <button class="btn btn-success me-md-3" type="submit">Salvar</button>
-                                    <a class="btn btn-danger" href="/dashboard?page=listar">Cancelar</a>
-                                </div>
+                        <div class="row g-3">
+                            <div class="col-md-12">
+                                <label for="nome" class="form-label">Nome</label>
+                                <input type="text" name="nome" id="nome" class="form-control" value="<?= $devedor->nome; ?>" readonly>
                             </div>
-                        </form>
+                            <div class="col-md-12">
+                                <label for="endereco" class="form-label">Endereço</label>
+                                <input type="text" name="endereco" id="endereco" class="form-control" value="<?= $devedor->endereco; ?>" readonly>
+                            </div>
+                            <div class="col-md-3">
+                                <label for="cpf_cnpj" class="form-label">CPF/CNPJ</label>
+                                <input type="text" name="cpf_cnpj" id="cpf_cnpj" class="form-control" value="<?= $devedor->cpf_cnpj; ?>" readonly>
+                            </div>
+                            <div class="col-md-3">
+                                <label for="nascimento" class="form-label">Data de Nascimento</label>
+                                <input type="text" name="nascimento" id="nascimento" class="form-control" value="<?= $devedor->nascimento; ?>" readonly>
+                            </div>
+                            <div class="col-md-3">
+                                <label for="valor" class="form-label">Valor</label>
+                                <input type="text" name="valor" id="valor" class="form-control" value="<?= $devedor->valor; ?>" readonly>
+                            </div>
+                            <div class="col-md-3">
+                                <label for="data_vencimento" class="form-label">Data de Vencimento</label>
+                                <input type="text" name="data_vencimento" id="data_vencimento" class="form-control" value="<?= $devedor->data_vencimento; ?>" readonly>
+                            </div>
+                            <div class="col-md-12">
+                                <label for="descricao_titulo" class="form-label">Descrição do Título</label>
+                                <textarea name="descricao_titulo" id="descricao_titulo" class="form-control" rows="5" readonly><?= $devedor->descricao_titulo; ?></textarea>
+                            </div>
+                            <div class="col-6">
+                                <a href="/dashboard?page=listar" class="btn btn-primary">Voltar</a>
+                            </div>
+                        </div>
                     </div>
                 </main>
             </div>

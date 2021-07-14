@@ -11,6 +11,9 @@ class Devedores
         $this->connection = $connection->connection();
     }
 
+    /**
+     * Método auxiliar para executar query
+     */
     private function run($sql)
     {
         try {
@@ -20,6 +23,9 @@ class Devedores
         }
     }
 
+    /**
+     * Método para criar devedor
+     */
     public function create($data)
     {
         $nome = $data['nome'];
@@ -36,6 +42,9 @@ class Devedores
         return $this->run($sql);
     }
 
+    /**
+     * Método para editar devedor
+     */
     public function update($id, $params)
     {
         $set = "`nome`='{$params['nome']}', 
@@ -53,6 +62,9 @@ class Devedores
         return $this->run($sql);
     }
 
+    /**
+     * Método para deletar devedor
+     */
     public function delete($id)
     {
         $sql = "DELETE FROM `devedores`
@@ -61,6 +73,9 @@ class Devedores
         return $this->run($sql);
     }
 
+    /**
+     * Método para resgatar devedores
+     */
     public function get($param, $valor)
     {
         $sql = "SELECT *
@@ -70,16 +85,54 @@ class Devedores
         return $this->run($sql)->fetchObject();
     }
 
+    /**
+     * Método para contar devedores
+     */
+    public function count()
+    {
+        $sql = "SELECT COUNT(id) AS qtd
+        FROM `devedores`;";
+
+        return $this->run($sql)->fetchObject();
+    }
+
+    /**
+     * Método para contar total da divida
+     */
+    public function sum()
+    {
+        $sql = "SELECT SUM(valor) AS total
+        FROM `devedores`;";
+
+        return $this->run($sql)->fetchObject();
+    }
+
+    /**
+     * Método para listar devedores com paginação
+     */
     public function list($limit = null, $start = 0)
     {
         $sql = "SELECT *
         FROM `devedores`";
 
         if ($limit) {
-            $sql .= " LIMIT " . $start . ", " . $limit . ";";
+            $sql .= " LIMIT " . ($start * 20) . ", " . $limit . ";";
         } else {
             $sql .= ";";
         }
+
+        return $this->run($sql)->fetchAll();
+    }
+
+    /**
+     * Método para filtrar devedores
+     */
+    public function filter($limit, $campo, $order_by = 'asc')
+    {
+        $sql = "SELECT *
+        FROM `devedores`
+        ORDER BY " . $campo . "  " . $order_by . "
+        LIMIT 0, " . $limit . ";";
 
         return $this->run($sql)->fetchAll();
     }
