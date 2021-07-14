@@ -47,6 +47,12 @@ if ( isset($_SESSION['alert']) ) {
                         <h1 class="h2">Adicionar Devedor</h1>
                     </div>
 
+                    <?php if($alert) : ?>
+                        <div class="alert alert-<?= $alert; ?>" role="alert">
+                            <?= $mensagem; ?>
+                        </div>
+                    <?php endif; ?>
+
                     <div>
                         <form method="post">
                             <div class="row g-3">

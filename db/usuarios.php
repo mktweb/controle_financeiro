@@ -11,6 +11,9 @@ class Usuarios
         $this->connection = $connection->connection();
     }
 
+    /**
+     * Método auxiliar para executar query
+     */
     private function run($sql)
     {
         try {
@@ -20,31 +23,43 @@ class Usuarios
         }
     }
 
+    /**
+     * Método para criar usuario
+     */
     public function create($nome, $email, $senha)
     {
         $sql = "INSERT INTO `usuarios` (`nome`, `email`, `senha`)
             VALUES ('$nome', '$email', '$senha')";
         
-        return $this->run($sql)->fetchObject();
+        return $this->run($sql);
     }
 
+    /**
+     * Método para atualizar usuario
+     */
     public function update($id, $params)
     {
         $sql = "UPDATE `usuarios`
             SET " . $params . "
             WHERE `id` = " . $id . ";";
 
-        return $this->run($sql)->fetchObject();
+        return $this->run($sql);
     }
 
+    /**
+     * Método para remover usuario
+     */
     public function delete($id)
     {
         $sql = "DELETE `usuarios`
             WHERE `id` = " . $id . ";";
 
-        return $this->run($sql)->fetchObject();
+        return $this->run($sql);
     }
 
+    /**
+     * Método para resgartar usuario
+     */
     public function get($param, $valor)
     {
         $sql = "SELECT *
@@ -54,6 +69,9 @@ class Usuarios
         return $this->run($sql)->fetchObject();
     }
 
+    /**
+     * Método para listar todos os usuarios com paginacao
+     */
     public function list($limit = null, $start = 0)
     {
         $sql = "SELECT *

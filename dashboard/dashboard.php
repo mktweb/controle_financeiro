@@ -57,18 +57,26 @@ class Dashboard
     public function adicionar()
     {
         if ($_POST['cpf_cnpj']) {
-            $_POST['cpf_cnpj'] = preg_replace('/\D/', '', $_POST['cpf_cnpj']);
-            $_POST['nascimento'] = date('Y-m-d', strtotime( str_replace("/", "-", $_POST['nascimento']) ));
-            $_POST['data_vencimento'] = date('Y-m-d', strtotime( str_replace("/", "-", $_POST['data_vencimento']) ));
-            $_POST['valor'] = preg_replace('/\./', '', $_POST['valor']);
-            $_POST['valor'] = preg_replace('/\,/', '.', $_POST['valor']);
             try {
+                array_walk($_POST, [$this, 'valida']);
+                
+                $_POST['cpf_cnpj'] = preg_replace('/\D/', '', $_POST['cpf_cnpj']);
+                $_POST['nascimento'] = date('Y-m-d', strtotime( str_replace("/", "-", $_POST['nascimento']) ));
+                $_POST['data_vencimento'] = date('Y-m-d', strtotime( str_replace("/", "-", $_POST['data_vencimento']) ));
+                $_POST['valor'] = preg_replace('/\./', '', $_POST['valor']);
+                $_POST['valor'] = preg_replace('/\,/', '.', $_POST['valor']);
+
                 $this->devedores->create($_POST);
 
                 $_SESSION['alert'] = 'success';
                 $_SESSION['mensagem'] = 'Devedor cadastrado com sucesso.';
 
                 header('Location: /dashboard?page=listar');
+            } catch (\Exception $e) {
+                $_SESSION['alert'] = 'danger';
+                $_SESSION['mensagem'] = 'Dados incompletos. Tente novamente.';
+                
+                $this->view('adicionar');
             } catch (\Throwable $th) {
                 $_SESSION['alert'] = 'danger';
                 $_SESSION['mensagem'] = 'Erro ao cadastrar devedor. Tente novamente mais tarde.';
@@ -78,6 +86,15 @@ class Dashboard
         } else {
             $this->view('adicionar');
         }
+    }
+
+    /**
+     * Método de validação de formulário
+     */
+    private function valida($elemento, $chave)
+    {
+        if (empty($elemento))
+            throw new Exception("Cadastro Incompleto");
     }
 
     /**
